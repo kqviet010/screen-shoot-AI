@@ -56,5 +56,3 @@ Kết quả sẽ được trả về **thời gian thực (Streaming)** và hi�
 - `popup/`: Giao diện nhỏ khi bấm vào icon trên thanh công cụ dùng để lưu trữ Key API.
 
 ---
-
-*Phát triển bởi sức mạnh của AI!*

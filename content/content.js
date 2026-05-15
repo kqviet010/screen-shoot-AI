@@ -20,10 +20,10 @@ function initCrop() {
 
   overlay = document.createElement('div');
   overlay.id = 'screen-shoot-overlay';
-  
+
   selection = document.createElement('div');
   selection.id = 'screen-shoot-selection';
-  
+
   const darkBg = document.createElement('div');
   darkBg.style.position = 'absolute';
   darkBg.style.width = '100%';
@@ -31,7 +31,7 @@ function initCrop() {
   darkBg.style.background = 'rgba(0,0,0,0.5)';
   overlay.appendChild(darkBg);
   overlay.appendChild(selection);
-  
+
   document.body.appendChild(overlay);
 
   overlay.addEventListener('mousedown', (e) => {
@@ -51,7 +51,7 @@ function initCrop() {
   overlay.addEventListener('mouseup', (e) => {
     if (!isDragging) return;
     isDragging = false;
-    
+
     const rect = selection.getBoundingClientRect();
     const coords = {
       x: rect.left,
@@ -87,10 +87,10 @@ function updateSelection(currentX, currentY) {
 
 function createUI() {
   if (document.getElementById('ss-container')) return;
-  
+
   const container = document.createElement('div');
   container.id = 'ss-container';
-  
+
   // Icon AI
   const btn = document.createElement('img');
   btn.src = chrome.runtime.getURL('image/images.jfif');
@@ -99,31 +99,31 @@ function createUI() {
   btn.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
-    chrome.runtime.sendMessage({ action: 'CROP_COORDS', coords: null });
+    initCrop();
   });
-  
+
   // Chat Bubble
   const bubble = document.createElement('div');
   bubble.id = 'ss-bubble';
-  
+
   const closeBtn = document.createElement('div');
   closeBtn.className = 'ss-close-btn';
   closeBtn.innerHTML = '✖';
   closeBtn.onclick = () => {
     bubble.style.display = 'none';
   };
-  
+
   const content = document.createElement('div');
   content.className = 'ss-bubble-content';
   content.id = 'ss-bubble-content';
-  
+
   bubble.appendChild(closeBtn);
   bubble.appendChild(content);
-  
+
   // Nối vào container
   container.appendChild(btn);
   container.appendChild(bubble);
-  
+
   document.body.appendChild(container);
 }
 

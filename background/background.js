@@ -121,8 +121,9 @@ async function callGroq(base64Image, tabId) {
         }
       ],
       stream: true,
-      max_tokens: 150,
-      temperature: 0.1
+      max_tokens: 20,
+      temperature: 0.0,
+      top_p: 1
     };
 
     const res = await fetch(url, {

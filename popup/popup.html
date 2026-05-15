@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Screen Shoot AI Config</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h2>🤖 Screen Shoot AI</h2>
+    <div class="form-group">
+      <label for="apiKey">Groq API Key:</label>
+      <input type="text" id="apiKey" placeholder="Nhập API Key bắt đầu bằng gsk_...">
+    </div>
+    <div class="form-group">
+      <label for="prompt">Prompt mặc định:</label>
+      <input type="text" id="prompt" value="Trả lời câu hỏi này">
+    </div>
+    <button id="saveBtn">Lưu lại</button>
+    <p id="status"></p>
+    <hr>
+    <button id="captureBtn">Chụp Vùng Ngay (Ctrl+Shift+X)</button>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

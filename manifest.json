@@ -12,8 +12,20 @@
     "<all_urls>",
     "https://api.groq.com/*"
   ],
+  "icons": {
+    "16":  "image/icon16.png",
+    "32":  "image/icon32.png",
+    "48":  "image/icon48.png",
+    "128": "image/icon128.png"
+  },
   "action": {
-    "default_popup": "popup/popup.html"
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16":  "image/icon16.png",
+      "32":  "image/icon32.png",
+      "48":  "image/icon48.png",
+      "128": "image/icon128.png"
+    }
   },
   "background": {
     "service_worker": "background/background.js"

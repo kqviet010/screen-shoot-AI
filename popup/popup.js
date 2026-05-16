@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function setStatus(msg, isError) {
     status.textContent = msg;
-    status.style.color = isError ? '#e74c3c' : '#27ae60';
+    status.style.color = isError ? '#f87171' : '#da7756';
     if (!isError) setTimeout(() => { status.textContent = ''; }, 2000);
   }
 

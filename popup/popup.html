@@ -2,25 +2,56 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Screen Shoot AI Config</title>
+  <title>Screen Shoot AI</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <div class="container">
-    <h2>🤖 Screen Shoot AI</h2>
-    <div class="form-group">
-      <label for="apiKey">Groq API Key:</label>
-      <input type="text" id="apiKey" placeholder="Nhập API Key bắt đầu bằng gsk_...">
+
+  <div class="popup-header">
+    <div class="popup-logo">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <circle cx="10" cy="10" r="9" stroke="rgba(255,255,255,0.4)" stroke-width="0.8"/>
+        <circle cx="10" cy="10" r="5.5" fill="rgba(255,255,255,0.08)"/>
+        <circle cx="10" cy="4"   r="1.8" fill="white" opacity="0.9"/>
+        <circle cx="15" cy="13" r="1.8" fill="white" opacity="0.9"/>
+        <circle cx="5"  cy="13" r="1.8" fill="white" opacity="0.9"/>
+        <circle cx="10" cy="10" r="2.5" fill="white"/>
+        <circle cx="9.2" cy="9.2" r="0.7" fill="rgba(0,0,0,0.25)"/>
+      </svg>
     </div>
-    <div class="form-group">
-      <label for="prompt">Prompt mặc định:</label>
-      <input type="text" id="prompt" value="Trả lời câu hỏi này">
+    <div class="popup-header-text">
+      <h1>Screen Shoot AI</h1>
+      <p>Powered by AI Vision</p>
     </div>
-    <button id="saveBtn">Lưu lại</button>
-    <p id="status"></p>
-    <hr>
-    <button id="captureBtn">Chụp Vùng Ngay (Ctrl+Shift+X)</button>
   </div>
+
+  <div class="popup-body">
+    <div class="form-group">
+      <label for="apiKey">Groq API Key</label>
+      <input type="password" id="apiKey" placeholder="gsk_...">
+    </div>
+    <div class="form-group">
+      <label for="prompt">Prompt mặc định</label>
+      <input type="text" id="prompt" placeholder="Trả lời câu hỏi trên. Chỉ ghi đáp án đúng">
+    </div>
+    <button id="saveBtn">Lưu cấu hình</button>
+    <p id="status"></p>
+  </div>
+
+  <div class="popup-divider"></div>
+
+  <div class="popup-footer">
+    <button id="captureBtn">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+        <rect x="1" y="3.5" width="13" height="9" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+        <circle cx="7.5" cy="8" r="2.2" stroke="currentColor" stroke-width="1.3"/>
+        <path d="M5 3.5L5.8 2H9.2L10 3.5" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+      </svg>
+      Chụp Vùng Ngay
+      <span class="kbd">Ctrl+Shift+X</span>
+    </button>
+  </div>
+
   <script src="popup.js"></script>
 </body>
 </html>

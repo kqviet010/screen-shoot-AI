@@ -239,19 +239,12 @@ function positionBubbleNearIcon() {
   const gap = 12;
   // Canh phải theo icon
   const right = Math.max(10, window.innerWidth - rect.right);
-  // Ưu tiên hiện phía trên icon, nếu không đủ chỗ thì hiện phía dưới
-  const spaceAbove = rect.top - gap;
-  let top;
-  if (spaceAbove >= 120) {
-    top = rect.top - gap - Math.min(spaceAbove, 420);
-  } else {
-    top = rect.bottom + gap;
-  }
-  top = Math.max(10, Math.min(window.innerHeight - 120, top));
-  bubble.style.right  = right + 'px';
-  bubble.style.top    = top   + 'px';
+  // Đặt bubble ngay phía trên icon dùng bottom (khoảng cách từ đáy viewport đến đỉnh icon + gap)
+  const bottom = Math.max(10, window.innerHeight - rect.top + gap);
+  bubble.style.right  = right  + 'px';
+  bubble.style.bottom = bottom + 'px';
   bubble.style.left   = 'auto';
-  bubble.style.bottom = 'auto';
+  bubble.style.top    = 'auto';
 }
 
 function showBubbleLoading() {

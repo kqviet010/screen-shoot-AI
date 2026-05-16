@@ -103,7 +103,7 @@
 /* Chat bubble — Claude-inspired */
 #ss-bubble {
   position: fixed;
-  bottom: 110px;
+  bottom: 102px;
   right: 30px;
   z-index: 2147483647 !important;
   background: rgba(24, 24, 27, 0.97);

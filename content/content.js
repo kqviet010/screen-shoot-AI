@@ -107,20 +107,30 @@ function createUI() {
 
     const btnWrapper = document.createElement('div');
     btnWrapper.innerHTML = `<svg id="ss-floating-btn" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" title="Chụp ảnh màn hình gửi AI">
-  <defs>
-    <linearGradient id="ss-ext-grad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#7c3aed"/>
-      <stop offset="100%" stop-color="#06b6d4"/>
-    </linearGradient>
-  </defs>
-  <circle class="ss-icon-glow" cx="30" cy="30" r="29" fill="url(#ss-ext-grad)"/>
-  <circle cx="30" cy="30" r="26" fill="url(#ss-ext-grad)"/>
-  <circle class="ss-spin-ring" cx="30" cy="30" r="29" fill="none"
-    stroke="#06b6d4" stroke-width="3"
-    stroke-dasharray="44 132" stroke-linecap="round"/>
-  <path class="ss-sparkle" fill="white" opacity="0.95"
-    d="M30,17 L32.8,27.2 L43,30 L32.8,32.8 L30,43 L27.2,32.8 L17,30 L27.2,27.2 Z"/>
-  <circle class="ss-result-dot" cx="45" cy="15" r="5" fill="#22c55e"/>
+  <!-- Outer glow -->
+  <circle class="ss-icon-glow" cx="30" cy="30" r="29" fill="#cc0000"/>
+  <!-- Red iris -->
+  <circle cx="30" cy="30" r="26" fill="#7a0000"/>
+  <circle cx="30" cy="30" r="26" fill="#cc0000" opacity="0.55"/>
+  <!-- Rotating group: inner ring + 3 tomoe -->
+  <g class="ss-sharingan-rotor">
+    <circle cx="30" cy="30" r="13" fill="none" stroke="#0a0a0a" stroke-width="1.5"/>
+    <g transform="translate(30 30) rotate(0)">
+      <circle cx="0" cy="-18" r="4.5" fill="#0a0a0a"/>
+      <circle cx="3.2" cy="-13" r="2.5" fill="#0a0a0a"/>
+    </g>
+    <g transform="translate(30 30) rotate(120)">
+      <circle cx="0" cy="-18" r="4.5" fill="#0a0a0a"/>
+      <circle cx="3.2" cy="-13" r="2.5" fill="#0a0a0a"/>
+    </g>
+    <g transform="translate(30 30) rotate(240)">
+      <circle cx="0" cy="-18" r="4.5" fill="#0a0a0a"/>
+      <circle cx="3.2" cy="-13" r="2.5" fill="#0a0a0a"/>
+    </g>
+  </g>
+  <!-- Pupil (static) -->
+  <circle cx="30" cy="30" r="6.5" fill="#0a0a0a"/>
+  <circle cx="27.5" cy="27.5" r="1.8" fill="rgba(255,255,255,0.25)"/>
 </svg>`;
     const btn = btnWrapper.firstChild;
     btn.addEventListener('click', (e) => {

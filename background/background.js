@@ -42,7 +42,7 @@ async function blobToBase64DataUrl(blob) {
 
 async function handleCroppedImage(coords, tabId) {
   try {
-    const dataUrl = await chrome.tabs.captureVisibleTab(null, { format: 'jpeg', quality: 50 });
+    const dataUrl = await chrome.tabs.captureVisibleTab(null, { format: 'jpeg', quality: 85 });
 
     chrome.tabs.sendMessage(tabId, { action: 'SHOW_LOADING' });
 
@@ -62,7 +62,7 @@ async function handleCroppedImage(coords, tabId) {
 
     let finalW = cropW;
     let finalH = cropH;
-    const MAX_DIMENSION = 800;
+    const MAX_DIMENSION = 1024;
     if (finalW > MAX_DIMENSION || finalH > MAX_DIMENSION) {
       if (finalW > finalH) {
         finalH = Math.round(finalH * (MAX_DIMENSION / finalW));
@@ -77,7 +77,7 @@ async function handleCroppedImage(coords, tabId) {
     const ctx = canvas.getContext('2d');
     ctx.drawImage(bitmap, cropX, cropY, cropW, cropH, 0, 0, finalW, finalH);
 
-    const croppedBlob = await canvas.convertToBlob({ type: 'image/jpeg', quality: 0.5 });
+    const croppedBlob = await canvas.convertToBlob({ type: 'image/jpeg', quality: 0.85 });
     const base64data = await blobToBase64DataUrl(croppedBlob);
 
     await callGroq(base64data, tabId);
@@ -113,7 +113,7 @@ async function callGroq(base64Image, tabId) {
         }
       ],
       stream: true,
-      max_tokens: 300,
+      max_tokens: 1024,
       temperature: 0.0,
       top_p: 1
     };

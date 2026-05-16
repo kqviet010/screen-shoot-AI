@@ -57,7 +57,7 @@
 /* Sharingan: rotor xoay chậm mặc định */
 .ss-sharingan-rotor {
   animation: ss-sharingan-spin 4s linear infinite;
-  transform-box: fill-box;
+  transform-box: view-box;
   transform-origin: center;
 }
 @keyframes ss-sharingan-spin {

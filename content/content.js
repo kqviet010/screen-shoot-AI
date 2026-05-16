@@ -107,30 +107,29 @@ function createUI() {
 
     const btnWrapper = document.createElement('div');
     btnWrapper.innerHTML = `<svg id="ss-floating-btn" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" title="Chụp ảnh màn hình gửi AI">
-  <!-- Outer glow -->
   <circle class="ss-icon-glow" cx="30" cy="30" r="29" fill="#cc0000"/>
-  <!-- Red iris -->
-  <circle cx="30" cy="30" r="26" fill="#7a0000"/>
-  <circle cx="30" cy="30" r="26" fill="#cc0000" opacity="0.55"/>
-  <!-- Rotating group: inner ring + 3 tomoe -->
+  <circle cx="30" cy="30" r="27" fill="#110000"/>
+  <circle cx="30" cy="30" r="24" fill="#c50000"/>
+  <circle cx="30" cy="30" r="21" fill="#9a0000"/>
   <g class="ss-sharingan-rotor">
-    <circle cx="30" cy="30" r="13" fill="none" stroke="#0a0a0a" stroke-width="1.5"/>
-    <g transform="translate(30 30) rotate(0)">
-      <circle cx="0" cy="-18" r="4.5" fill="#0a0a0a"/>
-      <circle cx="3.2" cy="-13" r="2.5" fill="#0a0a0a"/>
+    <g transform="translate(30,30) rotate(0)">
+      <circle cx="0" cy="-17" r="4.2" fill="#0d0d0d"/>
+      <path fill="#0d0d0d" d="M 0,-21 A 21,21 0 0,1 21,0 L 13,0 A 13,13 0 0,0 0,-13 Z"/>
     </g>
-    <g transform="translate(30 30) rotate(120)">
-      <circle cx="0" cy="-18" r="4.5" fill="#0a0a0a"/>
-      <circle cx="3.2" cy="-13" r="2.5" fill="#0a0a0a"/>
+    <g transform="translate(30,30) rotate(120)">
+      <circle cx="0" cy="-17" r="4.2" fill="#0d0d0d"/>
+      <path fill="#0d0d0d" d="M 0,-21 A 21,21 0 0,1 21,0 L 13,0 A 13,13 0 0,0 0,-13 Z"/>
     </g>
-    <g transform="translate(30 30) rotate(240)">
-      <circle cx="0" cy="-18" r="4.5" fill="#0a0a0a"/>
-      <circle cx="3.2" cy="-13" r="2.5" fill="#0a0a0a"/>
+    <g transform="translate(30,30) rotate(240)">
+      <circle cx="0" cy="-17" r="4.2" fill="#0d0d0d"/>
+      <path fill="#0d0d0d" d="M 0,-21 A 21,21 0 0,1 21,0 L 13,0 A 13,13 0 0,0 0,-13 Z"/>
     </g>
   </g>
-  <!-- Pupil (static) -->
-  <circle cx="30" cy="30" r="6.5" fill="#0a0a0a"/>
-  <circle cx="27.5" cy="27.5" r="1.8" fill="rgba(255,255,255,0.25)"/>
+  <circle cx="30" cy="30" r="21" fill="none" stroke="#110000" stroke-width="1.2"/>
+  <circle cx="30" cy="30" r="13" fill="#160000"/>
+  <circle cx="30" cy="30" r="13" fill="none" stroke="#660000" stroke-width="0.8"/>
+  <circle cx="30" cy="30" r="6" fill="#0d0d0d"/>
+  <circle cx="27.8" cy="27.8" r="1.8" fill="rgba(255,160,160,0.22)"/>
 </svg>`;
     const btn = btnWrapper.firstChild;
     btn.addEventListener('click', (e) => {

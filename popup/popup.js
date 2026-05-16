@@ -24,8 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
       setStatus('⚠️ Vui lòng nhập API Key!', true);
       return;
     }
-    if (!apiKey.startsWith('gsk_')) {
-      setStatus('⚠️ API Key phải bắt đầu bằng gsk_', true);
+    if (!apiKey.startsWith('AIza')) {
+      setStatus('⚠️ API Key phải bắt đầu bằng AIza', true);
       return;
     }
 

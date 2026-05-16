@@ -99,10 +99,10 @@ async function callGroq(base64Image, tabId) {
     }
 
     const prompt = (defaultPrompt || "Trả lời câu hỏi này") + "\n(Hãy trả lời ngắn gọn, chỉ đưa ra đáp án, không giải thích dài dòng).";
-    const url = 'https://api.groq.com/openai/v1/chat/completions';
+    const url = 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions';
 
     const payload = {
-      model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+      model: 'gemini-2.5-flash',
       messages: [
         {
           role: "user",

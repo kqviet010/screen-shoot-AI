@@ -10,7 +10,7 @@
   ],
   "host_permissions": [
     "<all_urls>",
-    "https://api.groq.com/*"
+    "https://generativelanguage.googleapis.com/*"
   ],
   "icons": {
     "16":  "image/icon16.png",

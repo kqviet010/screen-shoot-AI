@@ -132,13 +132,81 @@ function createUI() {
   <circle cx="27.8" cy="27.8" r="1.8" fill="rgba(255,160,160,0.22)"/>
 </svg>`;
     const btn = btnWrapper.firstChild;
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      initCrop();
-    });
 
     container.appendChild(btn);
+
+    // Khôi phục vị trí đã lưu
+    const savedLeft = localStorage.getItem('ss-icon-left');
+    const savedTop  = localStorage.getItem('ss-icon-top');
+    if (savedLeft && savedTop) {
+      container.style.left   = savedLeft;
+      container.style.top    = savedTop;
+      container.style.bottom = 'auto';
+      container.style.right  = 'auto';
+    }
+
+    // Drag + click (phân biệt bằng ngưỡng 5px)
+    let isIconDragging = false;
+    let iconDragMoved  = false;
+    let iconDragStartX, iconDragStartY, iconStartLeft, iconStartTop;
+    let iconDragBubbleLeft = null;
+    let iconDragBubbleTop  = null;
+
+    container.addEventListener('mousedown', (e) => {
+      isIconDragging = true;
+      iconDragMoved  = false;
+      iconDragStartX = e.clientX;
+      iconDragStartY = e.clientY;
+      const rect = container.getBoundingClientRect();
+      iconStartLeft  = rect.left;
+      iconStartTop   = rect.top;
+      container.style.cursor = 'grabbing';
+      const bubble = document.getElementById('ss-bubble');
+      if (bubble && bubble.style.display !== 'none') {
+        const bRect = bubble.getBoundingClientRect();
+        iconDragBubbleLeft = bRect.left;
+        iconDragBubbleTop  = bRect.top;
+      } else {
+        iconDragBubbleLeft = null;
+      }
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isIconDragging) return;
+      const dx = e.clientX - iconDragStartX;
+      const dy = e.clientY - iconDragStartY;
+      if (Math.abs(dx) > 5 || Math.abs(dy) > 5) iconDragMoved = true;
+      if (!iconDragMoved) return;
+      const newLeft = Math.max(0, Math.min(window.innerWidth  - 60, iconStartLeft + dx));
+      const newTop  = Math.max(0, Math.min(window.innerHeight - 60, iconStartTop  + dy));
+      container.style.left   = newLeft + 'px';
+      container.style.top    = newTop  + 'px';
+      container.style.bottom = 'auto';
+      container.style.right  = 'auto';
+      if (iconDragBubbleLeft !== null) {
+        const bubble = document.getElementById('ss-bubble');
+        if (bubble && bubble.style.display !== 'none') {
+          bubble.style.left   = (iconDragBubbleLeft + dx) + 'px';
+          bubble.style.top    = (iconDragBubbleTop  + dy) + 'px';
+          bubble.style.bottom = 'auto';
+          bubble.style.right  = 'auto';
+        }
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (!isIconDragging) return;
+      isIconDragging = false;
+      container.style.cursor = 'grab';
+      if (iconDragMoved) {
+        localStorage.setItem('ss-icon-left', container.style.left);
+        localStorage.setItem('ss-icon-top',  container.style.top);
+      } else {
+        initCrop();
+      }
+    });
+
     document.body.appendChild(container);
   }
 
@@ -150,13 +218,20 @@ function createUI() {
     const header = document.createElement('div');
     header.id = 'ss-bubble-header';
 
-    const label = document.createElement('span');
-    label.textContent = 'AI Response';
-    header.appendChild(label);
+    const headerLeft = document.createElement('div');
+    headerLeft.className = 'ss-header-left';
+    const headerIcon = document.createElement('div');
+    headerIcon.className = 'ss-header-icon';
+    headerIcon.textContent = 'A';
+    const title = document.createElement('span');
+    title.className = 'ss-title';
+    title.textContent = 'Claude AI';
+    headerLeft.append(headerIcon, title);
+    header.appendChild(headerLeft);
 
     const closeBtn = document.createElement('div');
     closeBtn.className = 'ss-close-btn';
-    closeBtn.innerHTML = '✖';
+    closeBtn.innerHTML = '✕';
     closeBtn.onclick = () => { bubble.style.display = 'none'; };
     header.appendChild(closeBtn);
 
@@ -222,21 +297,76 @@ function createUI() {
   }
 }
 
+function positionBubbleNearIcon() {
+  const bubble = document.getElementById('ss-bubble');
+  const container = document.getElementById('ss-container');
+  if (!bubble || !container || bubble.style.display !== 'none') return;
+  const rect = container.getBoundingClientRect();
+  const bubbleW = 380;
+  const gap = 12;
+  let left = rect.left;
+  left = Math.max(10, Math.min(window.innerWidth - bubbleW - 10, left));
+  // Ưu tiên hiện phía trên icon, nếu không đủ chỗ thì hiện phía dưới
+  const spaceAbove = rect.top - gap;
+  let top;
+  if (spaceAbove >= 120) {
+    top = rect.top - gap - Math.min(spaceAbove, 420);
+  } else {
+    top = rect.bottom + gap;
+  }
+  top = Math.max(10, Math.min(window.innerHeight - 120, top));
+  bubble.style.left   = left + 'px';
+  bubble.style.top    = top  + 'px';
+  bubble.style.bottom = 'auto';
+  bubble.style.right  = 'auto';
+}
+
 function showBubbleLoading() {
   createUI();
   setIconState('loading');
+  positionBubbleNearIcon();
   document.getElementById('ss-bubble').style.display = 'block';
   document.getElementById('ss-bubble-content').innerHTML =
-    '<div class="ss-loading"><div class="ss-spinner"></div> AI đang phân tích...</div>';
+    '<div class="ss-loading"><div class="ss-dots"><span></span><span></span><span></span></div><span>Đang phân tích...</span></div>';
   document.getElementById('ss-bubble-actions').style.display = 'none';
 }
 
 function formatMarkdown(text) {
-  let html = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-  html = html.replace(/`(.*?)`/g, '<span style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px;font-family:monospace;color:#a78bfa">$1</span>');
-  return html;
+  let h = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  // fenced code blocks
+  h = h.replace(/```[\w]*\n?([\s\S]*?)```/g, (_, c) => `<pre><code>${c.trim()}</code></pre>`);
+  // headers
+  h = h.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  h = h.replace(/^## (.+)$/gm,  '<h2>$1</h2>');
+  h = h.replace(/^# (.+)$/gm,   '<h1>$1</h1>');
+  // blockquote (&gt; was escaped)
+  h = h.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+  // bold + italic
+  h = h.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
+  h = h.replace(/\*\*(.*?)\*\*/g,     '<strong>$1</strong>');
+  h = h.replace(/\*(.*?)\*/g,         '<em>$1</em>');
+  // inline code
+  h = h.replace(/`([^`]+)`/g, '<code>$1</code>');
+  // unordered lists
+  h = h.replace(/((?:^[*-] .+\n?)+)/gm, block => {
+    const items = block.trim().split('\n')
+      .map(l => `<li>${l.replace(/^[*-] /, '')}</li>`).join('');
+    return `<ul>${items}</ul>`;
+  });
+  // ordered lists
+  h = h.replace(/((?:^\d+\. .+\n?)+)/gm, block => {
+    const items = block.trim().split('\n')
+      .map(l => `<li>${l.replace(/^\d+\. /, '')}</li>`).join('');
+    return `<ol>${items}</ol>`;
+  });
+  // paragraphs — split on double newlines
+  const blockRe = /^<(h[123]|pre|ul|ol|blockquote)/;
+  h = h.split(/\n\n+/).map(chunk => {
+    chunk = chunk.trim();
+    if (!chunk || blockRe.test(chunk)) return chunk;
+    return `<p>${chunk.replace(/\n/g, '<br>')}</p>`;
+  }).join('\n');
+  return h;
 }
 
 function showBubbleResult(text) {

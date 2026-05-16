@@ -135,76 +135,10 @@ function createUI() {
 
     container.appendChild(btn);
 
-    // Khôi phục vị trí đã lưu
-    const savedLeft = localStorage.getItem('ss-icon-left');
-    const savedTop  = localStorage.getItem('ss-icon-top');
-    if (savedLeft && savedTop) {
-      container.style.left   = savedLeft;
-      container.style.top    = savedTop;
-      container.style.bottom = 'auto';
-      container.style.right  = 'auto';
-    }
-
-    // Drag + click (phân biệt bằng ngưỡng 5px)
-    let isIconDragging = false;
-    let iconDragMoved  = false;
-    let iconDragStartX, iconDragStartY, iconStartLeft, iconStartTop;
-    let iconDragBubbleLeft = null;
-    let iconDragBubbleTop  = null;
-
-    container.addEventListener('mousedown', (e) => {
-      isIconDragging = true;
-      iconDragMoved  = false;
-      iconDragStartX = e.clientX;
-      iconDragStartY = e.clientY;
-      const rect = container.getBoundingClientRect();
-      iconStartLeft  = rect.left;
-      iconStartTop   = rect.top;
-      container.style.cursor = 'grabbing';
-      const bubble = document.getElementById('ss-bubble');
-      if (bubble && bubble.style.display !== 'none') {
-        const bRect = bubble.getBoundingClientRect();
-        iconDragBubbleLeft = bRect.left;
-        iconDragBubbleTop  = bRect.top;
-      } else {
-        iconDragBubbleLeft = null;
-      }
+    btn.addEventListener('click', (e) => {
       e.preventDefault();
-    });
-
-    document.addEventListener('mousemove', (e) => {
-      if (!isIconDragging) return;
-      const dx = e.clientX - iconDragStartX;
-      const dy = e.clientY - iconDragStartY;
-      if (Math.abs(dx) > 5 || Math.abs(dy) > 5) iconDragMoved = true;
-      if (!iconDragMoved) return;
-      const newLeft = Math.max(0, Math.min(window.innerWidth  - 60, iconStartLeft + dx));
-      const newTop  = Math.max(0, Math.min(window.innerHeight - 60, iconStartTop  + dy));
-      container.style.left   = newLeft + 'px';
-      container.style.top    = newTop  + 'px';
-      container.style.bottom = 'auto';
-      container.style.right  = 'auto';
-      if (iconDragBubbleLeft !== null) {
-        const bubble = document.getElementById('ss-bubble');
-        if (bubble && bubble.style.display !== 'none') {
-          bubble.style.left   = (iconDragBubbleLeft + dx) + 'px';
-          bubble.style.top    = (iconDragBubbleTop  + dy) + 'px';
-          bubble.style.bottom = 'auto';
-          bubble.style.right  = 'auto';
-        }
-      }
-    });
-
-    document.addEventListener('mouseup', () => {
-      if (!isIconDragging) return;
-      isIconDragging = false;
-      container.style.cursor = 'grab';
-      if (iconDragMoved) {
-        localStorage.setItem('ss-icon-left', container.style.left);
-        localStorage.setItem('ss-icon-top',  container.style.top);
-      } else {
-        initCrop();
-      }
+      e.stopPropagation();
+      initCrop();
     });
 
     document.body.appendChild(container);
@@ -302,10 +236,9 @@ function positionBubbleNearIcon() {
   const container = document.getElementById('ss-container');
   if (!bubble || !container || bubble.style.display !== 'none') return;
   const rect = container.getBoundingClientRect();
-  const bubbleW = 380;
   const gap = 12;
-  let left = rect.left;
-  left = Math.max(10, Math.min(window.innerWidth - bubbleW - 10, left));
+  // Canh phải theo icon
+  const right = Math.max(10, window.innerWidth - rect.right);
   // Ưu tiên hiện phía trên icon, nếu không đủ chỗ thì hiện phía dưới
   const spaceAbove = rect.top - gap;
   let top;
@@ -315,10 +248,10 @@ function positionBubbleNearIcon() {
     top = rect.bottom + gap;
   }
   top = Math.max(10, Math.min(window.innerHeight - 120, top));
-  bubble.style.left   = left + 'px';
-  bubble.style.top    = top  + 'px';
+  bubble.style.right  = right + 'px';
+  bubble.style.top    = top   + 'px';
+  bubble.style.left   = 'auto';
   bubble.style.bottom = 'auto';
-  bubble.style.right  = 'auto';
 }
 
 function showBubbleLoading() {

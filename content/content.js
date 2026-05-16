@@ -29,6 +29,7 @@ function cleanupCrop() {
     isDragging = false;
   }
   document.removeEventListener('keydown', handleEscKey);
+  setIconState(null);
 }
 
 function initCrop() {
@@ -46,6 +47,7 @@ function initCrop() {
   overlay.appendChild(selection);
   document.body.appendChild(overlay);
   document.addEventListener('keydown', handleEscKey);
+  setIconState('crop');
 
   overlay.addEventListener('mousedown', (e) => {
     isDragging = true;
@@ -91,15 +93,36 @@ function updateSelection(currentX, currentY) {
   selection.style.height = Math.abs(currentY - startY) + 'px';
 }
 
+function setIconState(state) {
+  const btn = document.getElementById('ss-floating-btn');
+  if (!btn) return;
+  btn.classList.remove('ss-state-crop', 'ss-state-loading', 'ss-state-result');
+  if (state) btn.classList.add(`ss-state-${state}`);
+}
+
 function createUI() {
   if (!document.getElementById('ss-container')) {
     const container = document.createElement('div');
     container.id = 'ss-container';
 
-    const btn = document.createElement('img');
-    btn.src = chrome.runtime.getURL('image/images.jfif');
-    btn.id = 'ss-floating-btn';
-    btn.title = 'Chụp ảnh màn hình gửi AI';
+    const btnWrapper = document.createElement('div');
+    btnWrapper.innerHTML = `<svg id="ss-floating-btn" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" title="Chụp ảnh màn hình gửi AI">
+  <defs>
+    <linearGradient id="ss-ext-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+  </defs>
+  <circle class="ss-icon-glow" cx="30" cy="30" r="29" fill="url(#ss-ext-grad)"/>
+  <circle cx="30" cy="30" r="26" fill="url(#ss-ext-grad)"/>
+  <circle class="ss-spin-ring" cx="30" cy="30" r="29" fill="none"
+    stroke="#06b6d4" stroke-width="3"
+    stroke-dasharray="44 132" stroke-linecap="round"/>
+  <path class="ss-sparkle" fill="white" opacity="0.95"
+    d="M30,17 L32.8,27.2 L43,30 L32.8,32.8 L30,43 L27.2,32.8 L17,30 L27.2,27.2 Z"/>
+  <circle class="ss-result-dot" cx="45" cy="15" r="5" fill="#22c55e"/>
+</svg>`;
+    const btn = btnWrapper.firstChild;
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -192,6 +215,7 @@ function createUI() {
 
 function showBubbleLoading() {
   createUI();
+  setIconState('loading');
   document.getElementById('ss-bubble').style.display = 'block';
   document.getElementById('ss-bubble-content').innerHTML =
     '<div class="ss-loading"><div class="ss-spinner"></div> AI đang phân tích...</div>';
@@ -209,6 +233,8 @@ function formatMarkdown(text) {
 function showBubbleResult(text) {
   lastResultText = text;
   createUI();
+  setIconState('result');
+  setTimeout(() => setIconState(null), 3000);
   document.getElementById('ss-bubble').style.display = 'block';
   document.getElementById('ss-bubble-content').innerHTML = formatMarkdown(text);
   document.getElementById('ss-bubble-actions').style.display = 'flex';
@@ -216,6 +242,7 @@ function showBubbleResult(text) {
 
 function showBubbleError(error) {
   createUI();
+  setIconState(null);
   document.getElementById('ss-bubble').style.display = 'block';
   document.getElementById('ss-bubble-content').innerHTML = `<div class="ss-error">❌ Lỗi: ${error}</div>`;
   document.getElementById('ss-bubble-actions').style.display = 'none';

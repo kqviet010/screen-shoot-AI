@@ -5,31 +5,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const status = document.getElementById('status');
   const captureBtn = document.getElementById('captureBtn');
 
-  // Load existing config
   chrome.storage.local.get(['apiKey', 'defaultPrompt'], (result) => {
-    if (result.apiKey) {
-      apiKeyInput.value = result.apiKey;
-    }
-    if (result.defaultPrompt) {
-      promptInput.value = result.defaultPrompt;
-    } else {
-      promptInput.value = "Trả lời câu hỏi này";
-    }
+    if (result.apiKey) apiKeyInput.value = result.apiKey;
+    promptInput.value = result.defaultPrompt || "Trả lời câu hỏi này";
   });
+
+  function setStatus(msg, isError) {
+    status.textContent = msg;
+    status.style.color = isError ? '#e74c3c' : '#27ae60';
+    if (!isError) setTimeout(() => { status.textContent = ''; }, 2000);
+  }
 
   saveBtn.addEventListener('click', () => {
     const apiKey = apiKeyInput.value.trim();
     const defaultPrompt = promptInput.value.trim() || "Trả lời câu hỏi này";
 
+    if (!apiKey) {
+      setStatus('⚠️ Vui lòng nhập API Key!', true);
+      return;
+    }
+    if (!apiKey.startsWith('gsk_')) {
+      setStatus('⚠️ API Key phải bắt đầu bằng gsk_', true);
+      return;
+    }
+
     chrome.storage.local.set({ apiKey, defaultPrompt }, () => {
-      status.textContent = 'Đã lưu cấu hình!';
-      setTimeout(() => { status.textContent = ''; }, 2000);
+      setStatus('✓ Đã lưu cấu hình!', false);
     });
   });
 
   captureBtn.addEventListener('click', () => {
-    // Gửi message cho background để bắt đầu chụp
     chrome.runtime.sendMessage({ action: 'INIT_CAPTURE' });
-    window.close(); // Đóng popup
+    window.close();
   });
 });
